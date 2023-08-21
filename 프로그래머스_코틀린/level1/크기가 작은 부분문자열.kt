@@ -5,7 +5,7 @@ class Solution30 {
         var answer: Int = 0
 
         for (i in 0 .. t.length - p.length){
-            if(t.slice(i .. i+p.length - 1).toLong() <= p.toLong()){
+            if(t.slice(i until i+p.length).toLong() <= p.toLong()){
                 answer ++
             }
 
