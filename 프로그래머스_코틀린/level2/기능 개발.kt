@@ -1,6 +1,6 @@
 package 프로그래머스_코틀린.level2
 
-class Solution55 {
+class Solution4 {
     fun solution(progresses: IntArray, speeds: IntArray): IntArray {
         var answer = intArrayOf()
         var days = listOf<Int>()

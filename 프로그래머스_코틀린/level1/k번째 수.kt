@@ -10,7 +10,7 @@ class Solution35 {
     }
 
     fun getNum(array: IntArray, command: IntArray): Int {
-        var slicedArray = array.slice(command[0]-1..command[1]-1).sorted()
+        var slicedArray = array.slice(command[0]-1 until command[1]).sorted()
         return slicedArray[command[2]-1]
     }
 }

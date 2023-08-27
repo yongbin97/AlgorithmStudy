@@ -1,6 +1,6 @@
 package 프로그래머스_코틀린.level2
 
-class Solution61 {
+class Solution7 {
     fun solution(numbers: IntArray, target: Int): Int {
         var answer = calculation(target, 0, 0, numbers.toList())
         return answer

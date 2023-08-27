@@ -3,7 +3,7 @@ package 프로그래머스_코틀린.level2
 import kotlin.math.*
 
 
-class Solution60 {
+class Solution9 {
     fun solution(k: Int, dungeons: Array<IntArray>): Int {
         var answer: Int = -1
         var dungeonList = dungeons.toList()

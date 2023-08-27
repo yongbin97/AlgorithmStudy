@@ -2,7 +2,7 @@ package 프로그래머스_코틀린.level2
 
 import kotlin.collections.ArrayDeque
 
-class Solution56 {
+class Solution8 {
     fun solution(priorities: IntArray, location: Int): Int {
         var answer = 0
         var queue = ArrayDeque<Pair<Int, Int>>()

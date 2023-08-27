@@ -1,6 +1,6 @@
 package 프로그래머스_코틀린.level2
 
-class Solution {
+class Solution10 {
     fun solution(clothes: Array<Array<String>>): Int {
         var clothMap = HashMap<String, Int>()
         for (cloth in clothes){

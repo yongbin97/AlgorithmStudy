@@ -1,6 +1,6 @@
 package 프로그래머스_코틀린.level2
 
-class Solution59 {
+class Solution6 {
     fun solution(brown: Int, yellow: Int): IntArray {
         var sum = brown / 2 + 2
         var multiply = yellow - 4 + 2 * sum
