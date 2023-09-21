@@ -1,14 +1,13 @@
 import sys
 from collections import deque
 
+
 N = int(sys.stdin.readline())
 
-stk = deque(range(1, N+1))
+dq = deque([i for i in range(1, N+1)])
+while len(dq) != 1:
+    _ = dq.popleft()
+    second = dq.popleft()
+    dq.append(second)
 
-for _ in range(N):
-    if len(stk) == 1:
-        print(stk.pop())
-    else:
-        stk.popleft()
-        tmp = stk.popleft()
-        stk.append(tmp)
+print(dq.pop())
