@@ -1,24 +1,23 @@
 import sys
 
-T = int(input())
 
-for i in range(T):
-    case = sys.stdin.readline()
-    stack = []
-    flag = 1
-    for element in case:
-        if element == "(":
-            stack.append(element)
-        if element == ")":
-            if len(stack) != 0:
-                stack.pop()
+def is_vps(ps):
+    st = []
+    for p in ps:
+        if p == "(":
+            st.append(p)
+        else:
+            if len(st) == 0:
+                return "NO"
             else:
-                flag = 0
-                break
-    if len(stack) != 0:
-        flag = 0
+                st.pop()
 
-    if flag == 0:
-        print("NO")
-    else:
-        print("YES")
+    return "NO" if len(st) else "YES"
+
+N = int(sys.stdin.readline())
+
+for _ in range(N):
+    print(is_vps(sys.stdin.readline().strip()))
+
+
+
