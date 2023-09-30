@@ -1,0 +1,25 @@
+from typing import List
+from itertools import combinations
+
+
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        answer = []
+        def dfs(i, n_list: List[int]):
+            if len(n_list) == k:
+                answer.append(n_list)
+
+            for j in range(i+1, n+1):
+                dfs(j, n_list + [j])
+
+        for i in range(1, n+1):
+            dfs(i, [i])
+
+        return answer
+
+    def combine_2(self, n: int, k: int) -> List[List[int]]:
+        return list(map(list, combinations([i+1 for i in range(n)], k)))
+
+
+solution = Solution()
+print(solution.combine(4, 2))
