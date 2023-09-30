@@ -1,5 +1,5 @@
 from typing import List
-
+from itertools import permutations
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
@@ -18,6 +18,10 @@ class Solution:
 
         return answer
 
+    def permute_2(self, nums: List[int]) -> List[List[int]]:
+        return list(map(list, permutations(nums)))
+
 
 solution = Solution()
 print(solution.permute([1, 2, 3]))
+print(solution.permute_2([1, 2, 3]))
