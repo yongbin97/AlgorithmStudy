@@ -1,9 +1,35 @@
 from typing import List
 from collections import deque, defaultdict
+import heapq
 
 
 class Solution:
+    # use dijkstra
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        network = defaultdict(list)
+        for start, end, time in times:
+            network[start].append((end, time))
+
+        dist = defaultdict(int)
+
+        # (time, node)
+        heap = [(0, k)]
+
+        while heap:
+            curr_time, curr_node = heapq.heappop(heap)
+            dist[curr_node] = curr_time
+            for next_node, next_time in network[curr_node]:
+                if dist.get(next_node) is None:
+                    heapq.heappush(heap, (curr_time + next_time, next_node))
+
+        if len(dist) == n:
+            return max(dist.values())
+        else:
+            return -1
+
+
+
+    def networkDelayTime_2(self, times: List[List[int]], n: int, k: int) -> int:
         # visited[a] => time of n node receive signal
         visited_time = [-1] * n
         network = defaultdict(list)
