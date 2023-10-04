@@ -1,4 +1,4 @@
-class Trie:
+class Trie2:
     def __init__(self):
         self.trie_dict = {}
 
@@ -36,6 +36,49 @@ class Trie:
         return True
 
 
+
+class TrieNode:
+    def __init__(self):
+        self.word = False
+        self.child = {}
+
+class Trie:
+
+    def __init__(self):
+        self._root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self._root
+        for char in word:
+            if char not in node.child:
+                node.child[char] = TrieNode()
+            node = node.child[char]
+        node.word = True
+
+    def search(self, word: str) -> bool:
+        node = self._root
+        for char in word:
+            if char not in node.child:
+                return False
+            node = node.child[char]
+        return node.word
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self._root
+        for char in prefix:
+            if char not in node.child:
+                return False
+            node = node.child[char]
+
+        return True
+
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
 # Your Trie object will be instantiated and called as such:
 word = "apple"
 word2 = "abcde"
