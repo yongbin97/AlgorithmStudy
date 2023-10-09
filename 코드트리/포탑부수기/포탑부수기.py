@@ -60,11 +60,10 @@ class Solution:
 
         dq = deque()
         dq.append([attacker, [attacker]])
-        visited = []
+        visited = [[attacker]]
 
         while dq:
             turret, path = dq.popleft()
-            visited.append(turret)
 
             if turret == target:
                 break
@@ -73,6 +72,7 @@ class Solution:
                 next_x, next_y = (turret[0] + dx) % self.row, (turret[1] + dy) % self.col
                 if self.turret[next_x][next_y][0] > 0 and [next_x, next_y] not in visited :
                     dq.append([[next_x, next_y], path+[[next_x, next_y]]])
+                    visited.append([next_x, next_y])
 
         if target not in path:
             return None
