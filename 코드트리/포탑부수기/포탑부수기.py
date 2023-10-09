@@ -71,7 +71,7 @@ class Solution:
 
             for dx, dy in zip(dx_list, dy_list):
                 next_x, next_y = (turret[0] + dx) % self.row, (turret[1] + dy) % self.col
-                if self.turret[next_x][next_y][0] > 0 and [next_x, next_y] not in visited:
+                if self.turret[next_x][next_y][0] > 0 and [next_x, next_y] not in visited :
                     dq.append([[next_x, next_y], path+[[next_x, next_y]]])
 
         if target not in path:
