@@ -1,4 +1,5 @@
 import sys
+import heapq
 
 
 class Rabbit:
@@ -10,26 +11,39 @@ class Rabbit:
         self.row = 0
         self.col = 0
 
-    def __str__(self):
-        return f"[pid:{self.pid}, curr:({self.row}, {self.col}), d:{self.d}, score:{self.score}, jump:{self.jump_count}]"
+    def __lt__(self, other):
+        if self.jump_count != other.jump_count:
+            return self.jump_count < other.jump_count
+        if self.row + self.col != other.row + other.col:
+            return self.row + self.col < other.row + other.col
+        if self.row != other.row:
+            return self.row < other.row
+        if self.col != other.col:
+            return self.col < other.col
+        return self.pid < other.pid
 
     def __repr__(self):
         return f"[pid:{self.pid}, curr:({self.row}, {self.col}), d:{self.d}, score:{self.score}, jump:{self.jump_count}]"
 
 
+import time
+start = time.time()
 Q = int(sys.stdin.readline())
 first_op = list(map(int, sys.stdin.readline().split()))
 N, M, P = first_op[1:4]
 
 rabbit_dict = {}
+rabbit_list = []
 for i in range(P):
     pid = first_op[2 * i + 4]
     d = first_op[2 * i + 5]
-    rabbit_dict[pid] = Rabbit(pid, d)
+    new_rabbit = Rabbit(pid, d)
+    rabbit_dict[pid] = new_rabbit
+    heapq.heappush(rabbit_list, new_rabbit)
 
 
 def set_racer_rabbit() -> Rabbit:
-    rabbit = sorted(rabbit_dict.values(), key=lambda r: (r.jump_count, r.row + r.col, r.row, r.col, r.pid))[0]
+    rabbit = heapq.heappop(rabbit_list)
     rabbit.jump_count += 1
     return rabbit
 
@@ -59,6 +73,11 @@ def move(rabbit: Rabbit):
 
 
 def add_score(jump_rabbit_pid_list, s):
+    # jump_rabbit_list.sort(key=lambda r: (-(r.row + r.col), -r.row, -r.col, -r.pid))
+    # rabbit = jump_rabbit_list[0]
+    # rabbit.score += s
+    # rabbit_list.extend(sorted(jump_rabbit_list, key=lambda r: (r.jump_count, r.row + r.col, r.row, r.col, r.pid)))
+    # #
     jump_rabbits = [rabbit_dict[pid] for pid in jump_rabbit_pid_list]
     rabbit = sorted(jump_rabbits, key=lambda r: (-(r.row + r.col), -r.row, -r.col, -r.pid))[0]
     rabbit.score += s
@@ -74,6 +93,7 @@ for _ in range(Q - 1):
             rabbit = set_racer_rabbit()
             jump_rabbit_pid_list.append(rabbit.pid)
             move(rabbit)
+            heapq.heappush(rabbit_list, rabbit)
         add_score(jump_rabbit_pid_list, op_list[2])
 
     # 이동거리 변경
@@ -84,3 +104,5 @@ for _ in range(Q - 1):
     else:
         winner = sorted(rabbit_dict.values(), key=lambda r: -r.score)[0]
         print(winner.score)
+
+print(time.time()-start)
