@@ -32,15 +32,15 @@ print(store_dict)
 def search_basecamp():
     """
     i번째 사람 목표 편의점 기준으로 가장 가까운 베이스 캠프 찾기
-    좌, 상, 우, 하 순으로 이동 (우선순위: row, col)
+    상, 좌, 우, 하 순으로 이동 (우선순위: col, row)
 
     path_dict[i] = path[::-1]
     people_dict[i] = [base_r, base_c]
     maps[base_r][base_c] != -1
     """
     visited = [[False] * n for _ in range(n)]
-    dx_list = [0, -1, 0, 1]
-    dy_list = [-1, 0, 1, 0]
+    dx_list = [-1, 0, 0, 1]
+    dy_list = [0, -1, 1, 0]
 
     store = store_dict[idx]
     dq = deque()
@@ -155,7 +155,7 @@ def start():
         print(f"{idx} base camp: ({base_r}, {base_c})")
         find_path_with_disabled_path(base_r, base_c)
 
-
+disabled_list = []
 idx = 1
 while store_dict:
     print(f"########MIN: {idx}################")
