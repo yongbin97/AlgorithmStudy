@@ -27,7 +27,9 @@ class Rabbit:
 
 
 import time
+
 start = time.time()
+sys.stdin = open("/Users/yongbin/Desktop/developer/Algorithm_Study/코드트리/토끼와 경주/test.txt", "r")
 Q = int(sys.stdin.readline())
 first_op = list(map(int, sys.stdin.readline().split()))
 N, M, P = first_op[1:4]
@@ -49,19 +51,22 @@ def set_racer_rabbit() -> Rabbit:
 
 
 def move(rabbit: Rabbit):
-    dr_list = [rabbit.d, -1 * rabbit.d, 0, 0]
-    dc_list = [0, 0, rabbit.d, -1 * rabbit.d]
+    dr_dis = rabbit.d % (2 * N - 2)
+    dc_dis = rabbit.d % (2 * M - 2)
+
+    dr_list = [dr_dis, -1 * dr_dis, 0, 0]
+    dc_list = [0, 0, dc_dis, -1 * dc_dis]
 
     next_list = []
     for dr, dc in zip(dr_list, dc_list):
         next_r = (rabbit.row + dr) % (2 * N - 2)
         next_c = (rabbit.col + dc) % (2 * M - 2)
-
-        if next_r >= N:
-            next_r = 2 * N - 2 - next_r
-
-        if next_c >= M:
-            next_c = 2 * N - 2 - next_c
+        #
+        # if next_r >= N:
+        #     next_r = 2 * N - 2 - next_r
+        #
+        # if next_c >= M:
+        #     next_c = 2 * N - 2 - next_c
 
         next_list.append([next_r, next_c])
 
@@ -105,4 +110,4 @@ for _ in range(Q - 1):
         winner = sorted(rabbit_dict.values(), key=lambda r: -r.score)[0]
         print(winner.score)
 
-print(time.time()-start)
+print(time.time() - start)
