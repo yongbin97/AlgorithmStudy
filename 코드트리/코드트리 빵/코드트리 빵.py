@@ -100,7 +100,7 @@ def search_shortest_path(pid):
 
 def find_path_with_disabled_path(x, y):
     for pid, path in path_dict.items():
-        if (x, y) in path:
+        if path is not None and (x, y) in path:
             print(f"pid:{pid}, path_dict[pid]=None")
             path_dict[pid] = None
 
