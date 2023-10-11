@@ -57,14 +57,13 @@ class Task:
         return self.t < other.t
 
     def __repr__(self):
-        # return f"t:{self.t}, url:{self.domain}/{self.id}, p:{self.p}"
         return f"{self.domain}/{self.id}"
 
 
 # 채점기 정보 {J_id: Task}
 J_dict = OrderedDict()
-# 대기 큐 Priority Queue (Task)
-wait_q = []
+# 대기 큐 Priority Queue (Task) dict
+domain_wait_q = defaultdict(list)
 # 대기 큐 안에 있는 url dict {url: T/F}
 wait_q_url_dict = defaultdict(bool)
 # 도메인 시간 정보 {domain: {start: int, end: int}}
@@ -84,7 +83,8 @@ def set_j(input_data):
     u = input_data[1]
     for i in range(1, N + 1):
         J_dict[i] = None
-    heapq.heappush(wait_q, Task(0, 1, u))
+    heapq.heappush(domain_wait_q[u.split("/")[0]], Task(0, 1, u))
+    # domain_time_dict[u.split("/")[0]] = {"start": 0, "gap": 0}
     wait_q_url_dict[u] = True
 
 
@@ -97,38 +97,28 @@ def insert_task_wait_q(input_data):
     t, p = map(int, input_data[:2])
     u = input_data[2]
     if not wait_q_url_dict[u]:
-        heapq.heappush(wait_q, Task(t, p, u))
+        heapq.heappush(domain_wait_q[u.split("/")[0]], Task(t, p, u))
+        # domain_time_dict[u.split("/")[0]] = {"start": 0, "gap": 0}
         wait_q_url_dict[u] = True
-        print(f"new_task insert: {u}")
+        # print(f"new_task insert: {u}")
 
 
 def pop_task_wait_q(t) -> Optional[Task]:
     task_tmp_list = []
-    task = None
-    while wait_q:
-        task = heapq.heappop(wait_q)
 
-        # 이미 채점 중인 도메인
-        if domain_judging_dict[task.domain]:
-            task_tmp_list.append(task)
-            print(f"{task.domain} 이미 채점 중인 도메인")
-            task = None
-            continue
+    for domain, pq in domain_wait_q.items():
+        if not domain_judging_dict[domain] and domain_wait_q[domain]:
+            curr_domain_time = domain_time_dict.get(domain, {"start": 0, "gap": 0})
+            if curr_domain_time["start"] + 3 * curr_domain_time["gap"] <= t:
+                heapq.heappush(task_tmp_list, heapq.heappop(domain_wait_q[domain]))
 
-        # 채점 시간 예외처리
-        if domain_time_dict.get(task.domain) is not None:
-            curr_domain_time = domain_time_dict[task.domain]
-            if curr_domain_time["start"] + 3 * curr_domain_time["gap"] > t:
-                task_tmp_list.append(task)
-                print(f"{task.domain} 시간 예외처리")
-                task = None
-                continue
-        break
-
-    for tmp_task in task_tmp_list:
-        heapq.heappush(wait_q, tmp_task)
-
-    return task
+    if task_tmp_list:
+        task = heapq.heappop(task_tmp_list)
+        for tmp in task_tmp_list:
+            heapq.heappush(domain_wait_q[tmp.domain], tmp)
+        return task
+    else:
+        return None
 
 
 def try_task(input_data):
@@ -151,7 +141,7 @@ def try_task(input_data):
             domain_judging_dict[task.domain] = True
             domain_time_dict[task.domain]["start"] = t
             wait_q_url_dict[f"{task.domain}/{task.id}"] = False
-            print(f"{task.domain}/{task.id} start")
+            # print(f"{task.domain}/{task.id} start")
 
 
 def end_task(input_data):
@@ -165,7 +155,18 @@ def end_task(input_data):
         J_dict[j_id] = None
         domain_judging_dict[task.domain] = False
         domain_time_dict[task.domain]["gap"] = t - domain_time_dict[task.domain]["start"]
-        print(f"{task.domain}/{task.id} done")
+        # print(f"{task.domain}/{task.id} done")
+
+
+def print_wait_q():
+    """
+    step5
+    """
+    answer = 0
+    for v in domain_wait_q.values():
+        answer += len(v)
+    print(answer)
+
 
 
 sys.stdin = open("/Users/yongbin/Desktop/developer/Algorithm_Study/코드트리/코드트리계산기/input2.txt", "r")
@@ -173,7 +174,7 @@ start = time.time()
 Q = int(sys.stdin.readline())
 for _ in range(Q):
     query, *data = sys.stdin.readline().split()
-    print(query, data)
+    # print(query, data)
 
     # 100 N u0
     if int(query) == 100:
@@ -193,7 +194,8 @@ for _ in range(Q):
 
     else:
         # 500 t
-        print(len(wait_q))
+        print_wait_q()
+        # print(sum(len(domain_wait_q.values())))
     # print(f"J_dict: {J_dict}, wait_q: {wait_q}")
-    print()
+    # print(domain_wait_q)
 print(f"time: {time.time()-start}")
