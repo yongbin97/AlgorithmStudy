@@ -2,15 +2,16 @@ import java.util.*;
 
 class Solution {
     public boolean solution(String[] phone_book) {
+        boolean answer = true;
+        
+        // Arrays.sort(phone_book, (o1, o2) -> {
+        //     return o1.length() - o2.length();
+        // });
         Arrays.sort(phone_book);
         
-        for (int i = 0; i < phone_book.length - 1; i++){
-            String prefix = phone_book[i];
-            String word = phone_book[i+1];
-            
-            if (word.startsWith(prefix)) return false;
-        }
+        System.out.println(Arrays.toString(phone_book));
         
-        return true;
+        
+        return answer;
     }
 }
