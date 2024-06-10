@@ -7,7 +7,7 @@ class Solution {
         
         for (int i = 0; i < cards.length; i++){
             if (visited[i] == 0){
-                int count = dfs(i + 1, visited, cards);
+                int count = search(i + 1, visited, cards);
                 countList.add(count);
             }
         }
@@ -17,7 +17,7 @@ class Solution {
         else return countList.get(0) * countList.get(1);
     }
     
-   public int dfs(int curr, int[] visited, int[] cards){
+   public int search(int curr, int[] visited, int[] cards){
        int count = 1;
        
        visited[curr - 1] = 1;
