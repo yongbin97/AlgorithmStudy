@@ -2,19 +2,9 @@ import java.util.*;
 
 class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
-        /**
-         * [문제]
-         * times = [[from, to, time]]
-         * k번 노드에서 시작해서 n개의 노드에 모두 탐색하는데 걸리는 최소 시간
-         * 불가능하면 return -1
-         *
-         * [풀이]
-         * k번 노드부터 시작하여 BFS 탐색.
-         * timeOfNodes = int[] -> timeOfNodes[i] = i번 노드의 최소 탐색 시간
-         */
         // timeOfNodes[i]: i번 노드의 최소 탐색 시간 (0번 idx 무시)
         int[] timeOfNodes = new int[n + 1];
-        Arrays.fill(timeOfNodes, -1);
+        Arrays.fill(timeOfNodes, Integer.MAX_VALUE);
         // {from: [[to, time]]}
         Map<Integer, List<List<Integer>>> fromToNodesMap = new HashMap<>();
 
@@ -26,34 +16,32 @@ class Solution {
         }
 
         // 탐색
-        Queue<Integer> nodeList = new LinkedList<>();
-        nodeList.add(k);
+        PriorityQueue<int[]> nodeList = new PriorityQueue<>(((o1, o2) -> (o1[1] - o2[1])));
+        nodeList.add(new int[] {k, 0});
         timeOfNodes[k] = 0;
 
         while (!nodeList.isEmpty()) {
-            int currNodeIdx = nodeList.poll();
-            int currNodeTime = timeOfNodes[currNodeIdx];
+            // [nodeIdx, nodeTime]
+            int[] currNode = nodeList.poll();
 
-            if (!fromToNodesMap.containsKey(currNodeIdx)) continue;
+            if (!fromToNodesMap.containsKey(currNode[0])) continue;
 
-            for (List<Integer> next : fromToNodesMap.get(currNodeIdx)) {
+            for (List<Integer> next : fromToNodesMap.get(currNode[0])) {
                 int nextNodeIdx = next.get(0);
-                int currToNextTime = next.get(1);
-                int nextNodeTime = timeOfNodes[nextNodeIdx];
+                int nextTime = currNode[1] + next.get(1);
 
-                // 1. 다음노드 최초 방문
-                // 2. 현재 노드 최소 시간 + 다음 노드 이동 시간 < 다음 노드의 최소 시간 
-                //  => 갱신
-                if (nextNodeTime == -1 || currNodeTime + currToNextTime < nextNodeTime) {
-                    timeOfNodes[nextNodeIdx] = currNodeTime + currToNextTime;
-                    nodeList.add(nextNodeIdx);
+                if (timeOfNodes[nextNodeIdx] > nextTime) {
+                    timeOfNodes[nextNodeIdx] = nextTime;
+                    nodeList.add(new int[] {nextNodeIdx, nextTime});
                 }
             }
         }
 
+        System.out.println(Arrays.toString(timeOfNodes));
+
         int answer = 0;
         for (int i = 1; i < n + 1; i++) {
-            if (timeOfNodes[i] == -1) return -1;
+            if (timeOfNodes[i] == Integer.MAX_VALUE) return -1;
             answer = Math.max(answer, timeOfNodes[i]);
         }
 
