@@ -19,7 +19,7 @@ class Solution {
 				left = curr[0];
 				right = curr[1];
 			} else {
-				right = curr[1];
+				right = Math.max(right, curr[1]);
 			}
 			
 		}
