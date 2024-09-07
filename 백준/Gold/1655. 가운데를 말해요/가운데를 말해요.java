@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine().strip());
 
@@ -28,9 +29,9 @@ public class Main {
                 maxPQ.add(small);
                 minPQ.add(big);
             }
-            System.out.println(maxPQ.peek());
+            sb.append(maxPQ.peek()).append("\n");
         }
-
+        System.out.println(sb);
     }
 
 }
