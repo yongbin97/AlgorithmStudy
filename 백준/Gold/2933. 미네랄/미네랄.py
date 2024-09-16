@@ -16,11 +16,10 @@ for h in list(map(int, sys.stdin.readline().split())):
 
 
 def print_graph(graph):
-    for i, row in enumerate(graph):
+    for row in graph:
         for col in row:
             print(col, end="")
-        if i < R - 1:
-            print()
+        print()
 
 
 def in_range(r, c):
