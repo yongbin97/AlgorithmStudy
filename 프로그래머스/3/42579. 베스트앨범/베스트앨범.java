@@ -1,50 +1,50 @@
 import java.util.*;
 
-
 class Solution {
-    class Song {
-        int idx;
-        int play;
-        
-        public Song(int idx, int play){
-            this.idx = idx;
-            this.play = play;
-        }
-    }
     
-    public int[] solution(String[] genres, int[] plays) {        
-        Map<String, Integer> genrePlayMap = new HashMap<>();
-        Map<String, PriorityQueue<Song>> genreSongMap = new HashMap<>();
+    public int[] solution(String[] genres, int[] plays) {
+        List<Integer> answerList = new ArrayList<>();
         
-        for (int i = 0; i < genres.length; i++){
-            // 장르별 재생 수 기록하기
-            genrePlayMap.put(genres[i], genrePlayMap.getOrDefault(genres[i], 0) + plays[i]);
+        // id: play
+        Map<Integer, Integer> musicMap = new HashMap<>();
+        // genre: sum(play)
+        Map<String, Integer> genreMap = new HashMap<>();
+        // genre: [id]
+        Map<String, List<Integer>> genreMusicMap = new HashMap<>();
+        
+        // set maps
+        for (int i = 0; i < genres.length; i++) {
+            String genre = genres[i];
+            int play = plays[i];
             
-            // 장르별 노래 PQ에 넣기
-            Song newSong = new Song(i, plays[i]);
-            PriorityQueue songList = genreSongMap.getOrDefault(genres[i], new PriorityQueue<Song>((s1, s2) -> {
-                if (s1.play != s2.play) return s2.play - s1.play;
-                else return s1.idx - s2.idx;
-            }));
-            songList.offer(newSong);
-            genreSongMap.put(genres[i], songList);
+            musicMap.put(i, play);
+            genreMap.put(genre, genreMap.getOrDefault(genre, 0) + play);
+            
+            List<Integer> idList = genreMusicMap.getOrDefault(genre, new ArrayList<>());
+            idList.add(i);
+            genreMusicMap.put(genre, idList);
         }
         
-        List<Integer> answer = new ArrayList<>();
+        List<String> keySet = new ArrayList<>(genreMap.keySet());
+        keySet.sort((o1, o2) -> genreMap.get(o2).compareTo(genreMap.get(o1)));
         
-        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(genrePlayMap.entrySet());
-        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        
-        for (Map.Entry<String, Integer> entry: entryList){
-            String genre = entry.getKey();
-            for (int i = 0; i < 2; i++){
-                if (!genreSongMap.get(genre).isEmpty()){
-                    answer.add(genreSongMap.get(genre).poll().idx);
+        for (String genre: keySet) {
+            List<Integer> idList = genreMusicMap.get(genre);
+            idList.sort((o1, o2) -> {
+                if (musicMap.get(o1) == musicMap.get(o2)) {
+                    return o2.compareTo(o1);
+                } else {
+                    return musicMap.get(o2).compareTo(musicMap.get(o1));
                 }
+            });
+            
+            answerList.add(idList.get(0));
+            if (idList.size() > 1) {
+                answerList.add(idList.get(1));    
             }
         }
         
-        return answer.stream()
+        return answerList.stream()
             .mapToInt(Integer::intValue)
             .toArray();
     }
