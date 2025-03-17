@@ -2,14 +2,14 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] nums) {
-        int answer = 0;
+        int pick = nums.length / 2;
         
-        Map<Integer, Integer> countMap = new HashMap<>();
+        Map<Integer, Integer> monsterMap = new HashMap<>();
         
-        for (int num: nums){
-            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        for (int num: nums) {
+            monsterMap.put(num, monsterMap.getOrDefault(num, 0) + 1);
         }
         
-        return Math.min(countMap.keySet().size(), (int) nums.length / 2);
+        return Math.min(pick, monsterMap.keySet().size());
     }
 }
